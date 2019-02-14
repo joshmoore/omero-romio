@@ -11,9 +11,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 repositories {
     mavenCentral()
     mavenLocal()
-    maven {
-        url 'https://artifacts.openmicroscopy.org/artifactory/maven/'
-    }
+    maven { url 'https://artifacts.openmicroscopy.org/artifactory/maven/' }
 }
 
 dependencies {
@@ -31,6 +29,17 @@ test {
     // enable TestNG support (default is JUnit)
     useTestNG() {
         suites "src/test/resources/unit.testng.xml"
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                'Created-By': "Gradle ${gradle.gradleVersion}",
+                'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+        )
     }
 }
 
